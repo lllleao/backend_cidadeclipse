@@ -50,7 +50,7 @@ const sendDataLimiter = rateLimit({
 })
 
 app.use('/', createProxyMiddleware({
-    target: 'https://cidadeclipse.com/index.html',
+    target: 'https://cidadeclipse.com/',
     changeOrigin: true,
 }))
 // app.get('/', (req, res) => {
