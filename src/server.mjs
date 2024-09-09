@@ -49,14 +49,14 @@ const sendDataLimiter = rateLimit({
     message: 'Muitas requisições deste IP, por favor tente novamente mais tarde'
 })
 
-app.use('/', createProxyMiddleware({
-    target: 'https://cidadeclipse.com/',
-    changeOrigin: true,
-    secure: true
-}))
-// app.get('/', (req, res) => {
-//     res.send('Rodando')
-// })
+// app.use('/', createProxyMiddleware({
+//     target: 'https://cidadeclipse.com/',
+//     changeOrigin: true,
+//     secure: true
+// }))
+app.get('/', (req, res) => {
+    res.send('Rodando')
+})
 
 app.use('/api', sendDataLimiter, emailRoutes)
 app.get('/csrf-token', (req, res) => {
