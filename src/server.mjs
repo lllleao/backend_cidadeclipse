@@ -50,9 +50,8 @@ const sendDataLimiter = rateLimit({
 })
 
 app.use('/', createProxyMiddleware({
-    target: 'https://srv1603-files.hstgr.io/dce2706e33377f1d/files/public_html/index.html',
+    target: 'https://cidadeclipse.com/index.html',
     changeOrigin: true,
-    pathRewrite: {'^/$': '/'}
 }))
 // app.get('/', (req, res) => {
 //     res.send('Rodando')
