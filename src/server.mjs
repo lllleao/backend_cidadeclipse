@@ -5,6 +5,7 @@ import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import { generateCsrfToken } from './routes/emailSend/csrfTokens.js'
 import emailRoutes from './routes/emailRoutes.js'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 dotenv.config()
 
@@ -48,6 +49,14 @@ const sendDataLimiter = rateLimit({
     message: 'Muitas requisições deste IP, por favor tente novamente mais tarde'
 })
 
+app.use('/', createProxyMiddleware({
+    target: 'https://cidadeclipse.com/index.html',
+    changeOrigin: true,
+    pathRewrite: {'^/$': '/'}
+}))
+// app.get('/', (req, res) => {
+//     res.send('Rodando')
+// })
 
 app.use('/api', sendDataLimiter, emailRoutes)
 app.get('/csrf-token', (req, res) => {
@@ -55,11 +64,6 @@ app.get('/csrf-token', (req, res) => {
 
     res.json({csrfToken})
 })
-
-app.get('/', (req, res) => {
-    res.send('Rodando')
-})
-
 
 app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}`)
