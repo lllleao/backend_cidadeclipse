@@ -29,8 +29,7 @@ app.use(helmet.contentSecurityPolicy({
     }
 }))
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
