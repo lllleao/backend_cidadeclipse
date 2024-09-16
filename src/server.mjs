@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 app.use('/api', sendDataLimiter, emailRoutes)
 app.get('/csrf-token', (req, res) => {
     const csrfToken = generateCsrfToken()
-    
+
     res.json({ csrfToken })
 })
 
