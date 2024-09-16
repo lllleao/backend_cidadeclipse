@@ -32,13 +32,7 @@ app.use(helmet.contentSecurityPolicy({
 const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
+    origin:'*',
     methods: 'GET,POST',
     allowedHeaders: 'Content-Type, CSRF-Token'
 }))
@@ -57,7 +51,7 @@ app.get('/', (req, res) => {
 app.use('/api', sendDataLimiter, emailRoutes)
 app.get('/csrf-token', (req, res) => {
     const csrfToken = generateCsrfToken()
-    res.setHeader('Access-Control-Allow-Origin', 'https://cidadeclipse.com')
+    
     res.json({ csrfToken })
 })
 
