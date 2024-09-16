@@ -32,9 +32,16 @@ app.use(helmet.contentSecurityPolicy({
 const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({
-    origin: 'https://cidadeclipse.com/',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
     methods: 'GET,POST',
-    allowedHeaders: 'Content-Type, CSRF-Token'
+    allowedHeaders: ['Content-Type', 'CSRF-Token'],
+    credentials: true
 }))
 
 const sendDataLimiter = rateLimit({
