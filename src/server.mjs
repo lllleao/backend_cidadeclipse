@@ -39,7 +39,6 @@ app.use(cors({
         }
     },
     methods: 'GET,POST',
-    allowedHeaders: ['Content-Type', 'CSRF-Token'],
     credentials: true
 }))
 
