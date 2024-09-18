@@ -50,6 +50,7 @@ const sendDataLimiter = rateLimit({
     message: 'Muitas requisições deste IP, por favor tente novamente mais tarde'
 })
 
+
 app.get('/', (req, res) => {
     const data = getBooks()
     data.then((data) => res.json(data)).catch((err) => res.status(500).json({ error: err }))
