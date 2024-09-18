@@ -53,7 +53,10 @@ const sendDataLimiter = rateLimit({
 
 app.get('/', (req, res) => {
     const data = getBooks()
-    data.then((data) => res.json(data)).catch((err) => res.status(500).json({ error: err }))
+    data.then((data) => {
+        console.log(data)
+        res.json(data)
+    }).catch((err) => res.status(500).json({ error: err }))
 })
 
 app.use('/api', sendDataLimiter, emailRoutes)
