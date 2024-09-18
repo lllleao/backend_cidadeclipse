@@ -30,16 +30,16 @@ app.use(helmet.contentSecurityPolicy({
 }))
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
+
 app.use(cors({
     origin: function (origin, callback) {
-        console.log('Origem', origin)
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
             callback(new Error('Not allowed by CORS'))
         }
     },
-    methods: 'GET,POST',
+    methods: 'GET,POST,OPTIONS',
     allowedHeaders: ['Content-Type', 'CSRF-Token'],
     credentials: true
 }))
