@@ -15,8 +15,8 @@ datasource db {
 
 model PublicLib {
   id    Int  @map("_id") @id
-  date  String
+  title  String
   link  String
-  title String
+  desc String
   photo String @unique
 }
