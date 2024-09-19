@@ -20,3 +20,11 @@ model PublicLib {
   desc String
   photo String @unique
 }
+
+model Store_lib {
+  id    Int  @map("_id") @id
+  title  String
+  link  String
+  desc String
+  photo String @unique
+}

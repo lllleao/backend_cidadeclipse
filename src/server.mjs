@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
     }).catch((err) => res.status(500).json({ error: err }))
 })
 
-app.use('/api', sendDataLimiter, emailRoutes)
+app.use('/api', emailRoutes)
 app.get('/csrf-token', (req, res) => {
     const csrfToken = generateCsrfToken()
 
