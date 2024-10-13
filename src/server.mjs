@@ -5,7 +5,7 @@ import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import { generateCsrfToken } from './routes/emailSend/csrfTokens.js'
 import emailRoutes from './routes/emailRoutes.js'
-import getBooks from './database/db.js'
+import { getBooksPublic, getBooksStore } from './database/db.js'
 
 dotenv.config()
 
@@ -51,9 +51,26 @@ const sendDataLimiter = rateLimit({
 })
 
 
-app.get('/', (req, res) => {
-    const data = getBooks()
+app.get('/public-books', (req, res) => {
+    const data = getBooksPublic()
     data.then((data) => {
+        res.json(data)
+    }).catch((err) => res.status(500).json({ error: err }))
+})
+
+app.get('/store-books', (req, res) => {
+    const data = getBooksStore()
+    data.then((data) => {
+        res.json(data)
+    }).catch((err) => res.status(500).json({ error: err }))
+})
+
+app.get('/store-books/:id', (req, res) => {
+    const { id } = req.params
+    // console.log(id)
+    const book = getBooksStore(Number(id))
+
+    book.then(data => {
         res.json(data)
     }).catch((err) => res.status(500).json({ error: err }))
 })
