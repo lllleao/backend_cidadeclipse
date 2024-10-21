@@ -3,9 +3,18 @@ import dotenv from 'dotenv'
 import helmet from 'helmet'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
-import { generateCsrfToken } from './routes/emailSend/csrfTokens.js'
-import emailRoutes from './routes/emailRoutes.js'
-import { getBooksPublic, getBooksStore } from './database/db.js'
+import emailRoutes from './routes/emailRoute/emailRoutes.js'
+import routeCrsf from './routes/tokenGeneration/csrfToken.js'
+import publicBooks from './routes/books/publickBooks.js'
+import storeBooks from './routes/books/storeBooks.js'
+import createUser from './routes/user/createUser.js'
+import login from './routes/user/login.js'
+import profile from './routes/user/profile.js'
+import logout from './routes/user/logout.js'
+import { loginValidatorLogin } from './routes/auth/checkEmailPass.js'
+import cookieParser from 'cookie-parser'
+import authMiddToken from './routes/auth/authToken.js'
+import cart from './routes/cart/mainCart.js'
 
 dotenv.config()
 
@@ -14,6 +23,7 @@ const PORT = process.env.PORT || 9001
 
 app.use(express.json())
 app.use(helmet())
+app.use(cookieParser())
 
 app.use(helmet.contentSecurityPolicy({
     directives: {
@@ -51,36 +61,18 @@ const sendDataLimiter = rateLimit({
 })
 
 
-app.get('/public-books', (req, res) => {
-    const data = getBooksPublic()
-    data.then((data) => {
-        res.json(data)
-    }).catch((err) => res.status(500).json({ error: err }))
-})
+app.use('/', publicBooks)
+app.use('/store', storeBooks)
 
-app.get('/store-books', (req, res) => {
-    const data = getBooksStore()
-    data.then((data) => {
-        res.json(data)
-    }).catch((err) => res.status(500).json({ error: err }))
-})
+app.use('/api', sendDataLimiter, emailRoutes)
+app.use('/', routeCrsf)
 
-app.get('/store-books/:id', (req, res) => {
-    const { id } = req.params
-    // console.log(id)
-    const book = getBooksStore(Number(id))
-
-    book.then(data => {
-        res.json(data)
-    }).catch((err) => res.status(500).json({ error: err }))
-})
-
-app.use('/api', emailRoutes)
-app.get('/csrf-token', (req, res) => {
-    const csrfToken = generateCsrfToken()
-
-    res.json({ csrfToken })
-})
+// user
+app.use('/', createUser)
+app.use('/', loginValidatorLogin, login)
+app.use('/', authMiddToken, profile)
+app.use('/', logout)
+app.use('/', authMiddToken, cart)
 
 app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}`)

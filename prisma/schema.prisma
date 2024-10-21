@@ -37,6 +37,7 @@ model Store_lib {
 
 model User {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
   email    String   @unique
   password String
   cart     Cart?    @relation("UserCart")
@@ -57,4 +58,5 @@ model Item {
   name    String
   photo String @unique
   price   Float
+  quant    Int
 }

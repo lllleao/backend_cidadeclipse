@@ -1,7 +1,7 @@
 import express from 'express'
 import { body, validationResult } from 'express-validator'
-import sendEmail from './emailSend/emailLogic.js'
-import { csrfCheck } from './emailSend/csrfTokens.js'
+import sendEmail from '../../logicsEmail/emailLogic.js'
+import { csrfCheck } from '../../logicsEmail/csrfTokens.js'
 
 const router = express.Router()
 
