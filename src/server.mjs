@@ -22,6 +22,8 @@ import removeItem from './routes/cart/removeItem.js'
 import confirm from './routes/user/confirm.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import authMiddToken from './routes/auth/authToken.js'
+import cleanupUnverifiedUsers from './deleteUser/cleanUserNotVerified.js'
 
 dotenv.config()
 
@@ -89,6 +91,13 @@ app.use('/', cart)
 app.use('/', addToCart)
 app.use('/', cartItems)
 app.use('/', removeItem)
+app.post('/cleanupUsers', cleanupUnverifiedUsers)
+
+// Check token
+app.use('/getCookie', authMiddToken, (req, res) => {
+
+    res.status(200).json({msg: 'Conexão válida'})
+})
 
 app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}`)

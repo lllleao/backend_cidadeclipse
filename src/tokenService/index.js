@@ -25,7 +25,6 @@ export const verifyEmailToken = (token) => {
     return new Promise((resolve, reject) => {
         jwt.verify(token, JWT_SECRET, (err, decoded) => {
             if (err) {
-                console.log('dentro')
                 reject(err)
             }
 

@@ -43,6 +43,7 @@ model User {
   token    String?
   isVerified    Boolean
   cart     Cart?    @relation("UserCart")
+  createdAt DateTime @default(now())
 }
 
 model Cart {
