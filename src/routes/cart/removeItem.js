@@ -10,7 +10,6 @@ router.delete('/removeItem/:itemId', authMiddToken, async (req, res) => {
     const token = req.cookies
     const { itemId } = req.params
     if (!token) return res.status(401).json({msg: 'Token inválido'})
-    console.log(itemId)
     prisma.item.delete({
         where: {id: itemId}
     })
