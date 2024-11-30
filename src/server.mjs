@@ -48,7 +48,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'CSRF-Token', 'authorization'],
     credentials: true
 }))
-app.options('*', cors())
 app.use(express.json())
 app.use(helmet())
 app.use(cookieParser())
