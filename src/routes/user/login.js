@@ -16,7 +16,7 @@ router.post('/login', (req, res) => {
     if (token) return res.status(400).json({msg: 'Login já realizado'})
     
     const { email, password } = req.body
-    if (!erros.isEmpty()) return res.status(400).json({ erros: erros.array() })
+    if (!erros.isEmpty()) return res.status(400).json({ erros: `${erros.array()} Esse error` })
 
     prisma.user.findUnique({
         where: {
