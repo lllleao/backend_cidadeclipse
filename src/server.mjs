@@ -63,7 +63,7 @@ app.use(cors({
         }
     },
     methods: 'GET,POST,OPTIONS,DELETE',
-    allowedHeaders: ['Content-Type', 'CSRF-Token'],
+    allowedHeaders: ['Content-Type', 'CSRF-Token', 'authorization'],
     credentials: true
 }))
 
