@@ -9,6 +9,7 @@ const prisma = new PrismaClient()
 const JWT_SECRET = process.env.JWT_SECRET
 
 router.post('/login', (req, res) => {
+    console.log('entrou')
     const erros = validationResult(req)
     const token = req.cookies.token
 
