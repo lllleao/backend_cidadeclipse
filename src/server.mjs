@@ -34,20 +34,6 @@ const app = express()
 const PORT = process.env.PORT || 9001
 app.use(express.static(path.join(__dirname, '..', 'public')))
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
-
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
-    methods: ['GET', 'POST', 'OPTIONS', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'CSRF-Token', 'authorization'],
-    credentials: true
-}))
 app.use(express.json())
 app.use(helmet())
 app.use(cookieParser())
@@ -64,6 +50,21 @@ app.use(helmet.contentSecurityPolicy({
         baseUri: ["'self'"],
         formAction: ["'self'"],
     }
+}))
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    methods: ['GET', 'POST', 'OPTIONS', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'CSRF-Token', 'authorization'],
+    credentials: true
 }))
 
 const sendDataLimiter = rateLimit({
