@@ -9,14 +9,14 @@ const prisma = new PrismaClient()
 const JWT_SECRET = process.env.JWT_SECRET
 
 router.post('/login', (req, res) => {
-    console.log('entrou')
     const erros = validationResult(req)
     const token = req.cookies.token
+    console.log(req.headers['x-forwarded-proto'])
 
     if (token) return res.status(400).json({msg: 'Login já realizado'})
     
     const { email, password } = req.body
-    if (!erros.isEmpty()) return res.status(400).json({ erros: `${erros.array()} Esse error` })
+    if (!erros.isEmpty()) return res.status(400).json({ erros: erros.array() })
 
     prisma.user.findUnique({
         where: {
@@ -37,8 +37,9 @@ router.post('/login', (req, res) => {
             res.cookie('token', token, {
                 path: '/',
                 httpOnly: true,
-                sameSite: 'strict',
-                maxAge: 3600000
+                sameSite: 'none',
+                maxAge: 3600000,
+                secure: true
             })
             return res.status(201).json({passWordCorrect: false, msg: email, loginUserExist: false, loginSuccess: true})
 
