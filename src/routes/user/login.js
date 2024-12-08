@@ -2,16 +2,20 @@ import express from "express"
 import bcrypt from 'bcrypt'
 import { PrismaClient } from "@prisma/client"
 import jwt from "jsonwebtoken"
-import { validationResult } from "express-validator"
+import { validationResult, body } from "express-validator"
 
 const router = express.Router()
 const prisma = new PrismaClient()
 const JWT_SECRET = process.env.JWT_SECRET
 
-router.post('/login', (req, res) => {
+const loginValidatorLogin = [
+    body('email').isEmail().trim().notEmpty().withMessage('Por favor, forneça um email válido'),
+    body('password').notEmpty().withMessage('Senha é obrigatória')
+]
+
+router.post('/login', loginValidatorLogin, (req, res) => {
     const erros = validationResult(req)
     const token = req.cookies.token
-    console.log(req.headers['x-forwarded-proto'])
 
     if (token) return res.status(400).json({msg: 'Login já realizado'})
     

@@ -6,15 +6,29 @@ const router = express.Router()
 const prisma = new PrismaClient()
 
 router.delete('/removeItem/:itemId', authMiddToken, async (req, res) => {
-    const userId = req.user
-    const token = req.cookies
+    const { token } = req.cookies
     const { itemId } = req.params
+    const userId = req.user
     if (!token) return res.status(401).json({msg: 'Token inválido'})
+    
+    
+
     prisma.item.delete({
-        where: {id: itemId}
-    })
-    .then(() => res.status(200).json({msg: 'Item excluído'}))
-    .catch(err => {
+        where: {id: Number(itemId)}
+    }).then((item) => {
+        prisma.cart.findUnique({
+            where: {id: item.cartId}
+        }).then(cart => {
+            prisma.cart.update({
+                where: {id: item.cartId},
+                data: {
+                    totalPrice: cart.totalPrice - item.price
+                }
+            }).catch(err => console.error('Não atualizou o preço total', err))
+        }).catch(err => console.error('Não encontrou o cart', err))
+        
+        res.status(200).json({msg: 'Item excluído'})
+    }).catch(err => {
         console.log(err)
         res.status(500).json({msg: 'Erro ao excluir o item'})
     })

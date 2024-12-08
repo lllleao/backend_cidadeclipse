@@ -1,5 +1,5 @@
 import express from 'express'
-import { body, validationResult } from 'express-validator'
+import { body, check, validationResult } from 'express-validator'
 import sendEmail from '../../logicsEmail/emailLogic.js'
 import { csrfCheck } from '../../logicsEmail/csrfTokens.js'
 
@@ -15,9 +15,9 @@ function formatPhoneNumber(value) {
 }
 
 const validateData = [
-    body('emailUser').trim().isEmail().withMessage('Email inválido'),
-    body('name').trim().notEmpty().withMessage('Nome é obrigatório'),
-    body('text').trim().notEmpty().withMessage('Mensagem é obrigatória'),
+    body('emailUser').trim().notEmpty().isEmail().withMessage('Email inválido'),
+    body('name').trim().notEmpty().escape().withMessage('Nome é obrigatório'),
+    body('text').trim().notEmpty().escape().withMessage('Mensagem é obrigatória'),
     body('number').optional({ checkFalsy: true }).trim().isNumeric().withMessage('Número inválido')
 ]
 

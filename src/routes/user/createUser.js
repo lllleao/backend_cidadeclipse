@@ -2,7 +2,7 @@ import express from "express"
 import bcrypt from 'bcrypt'
 import { PrismaClient } from "@prisma/client"
 import { validationResult } from "express-validator"
-import { check } from "express-validator"
+import { check, body } from "express-validator"
 import { generateJWTToken } from "../../tokenService/index.js"
 import sendEmailVerified from "../../emailService/index.js"
 
@@ -12,9 +12,9 @@ const prisma = new PrismaClient()
 
 
 const loginValidatorSign = [
-    check('email', 'Por favor, forneça um email válido').isEmail().trim(),
-    check('name', 'Por favor, forneça um nome válido').notEmpty().trim().escape(),
-    check('password', 'Senha é obrigatória').notEmpty()
+    body('email').isEmail().trim().notEmpty().withMessage('Por favor, forneça um email válido'),
+    body('name').notEmpty().trim().escape().withMessage('Por favor, forneça um nome válido'),
+    body('password').notEmpty().withMessage('Senha é obrigatória')
 ]
 
 router.post('/create', loginValidatorSign, async (req, res) => {

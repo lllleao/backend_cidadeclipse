@@ -9,12 +9,13 @@ router.get('/cartItems', authMiddToken, async (req, res) => {
     const userId = req.user
     const token = req.cookies
 
-    if (!token) return res.status(404).json({msg: 'Token inválido'})
+    if (!token) return res.status(401).json({msg: 'Token inválido'})
 
     prisma.item.findMany({
         where: {userId}
     }).then(items => {
         if (!items) return res.status(501).json({msg: 'Itens não encontrados'})
+        
         res.status(200).json({items})
     }).catch(err => {
         console.error(err)

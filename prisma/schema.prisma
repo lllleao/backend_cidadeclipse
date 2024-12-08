@@ -43,6 +43,7 @@ model User {
   token    String?
   isVerified    Boolean
   cart     Cart?    @relation("UserCart")
+  purchase     Purchase[]    @relation("PurchaseUser")
   createdAt DateTime @default(now())
 }
 
@@ -56,11 +57,33 @@ model Cart {
 
 model Item {
   cart    Cart @relation(name: "CartToItem", fields: [cartId], references: [id], onDelete: Cascade)
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int @id @map("_id")
   cartId    String @db.ObjectId
   userId    String @db.ObjectId
   name    String @unique
   photo String
   price   Float
   quant    Int
+}
+
+model Purchase {
+  id          String     @id @map("_id") @default(auto()) @db.ObjectId
+  userId      String     @db.ObjectId
+  user        User       @relation(name: "PurchaseUser", fields: [userId], references: [id], onDelete: Cascade)
+  itemsInfo   ItemInfo[] @relation("ItemsInfoPurchase")
+  totalPrice  Float
+  buyerName   String
+  buyerCPF    String
+  buyerAddress String
+  createdAt    DateTime  @default(now())
+}
+
+model ItemInfo {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  photo        String
+  price        Float
+  quant        Int
+  purchaseId   String @db.ObjectId
+  purchase     Purchase @relation(name: "ItemsInfoPurchase", fields: [purchaseId], references: [id], onDelete: Cascade)
 }

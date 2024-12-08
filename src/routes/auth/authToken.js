@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 const JWT_SECRET = process.env.JWT_SECRET
 
 const authMiddToken = (req, res, next) => {
-    const token = req.cookies.token
+        const token = req.cookies.token
     if (!token) {
         return res.status(401).json({msg: 'Token ausente, autorização negada'})
     }

@@ -7,7 +7,7 @@ const router = express.Router()
 const prisma = new PrismaClient()
 
 router.post('/addCart', authMiddToken, (req, res) => {
-    const { photo, price, quant, name } = req.body
+    const { photo, price, quant, name, id } = req.body
 
     const userId = req.user
     const token = req.cookies
@@ -25,7 +25,8 @@ router.post('/addCart', authMiddToken, (req, res) => {
                 name,
                 photo,
                 price,
-                quant
+                quant,
+                id: id
             }
         }).then(item => {
             prisma.item.aggregate({
@@ -51,7 +52,7 @@ router.post('/addCart', authMiddToken, (req, res) => {
             })
         }).catch(err => {
             console.log(err, 'Item criado')
-            return res.status(401).json({msg: 'Item já criado criado'})
+            return res.status(401).json({msg: 'criado'})
         })
     }).catch(err => {
         console.error('Carrinho não encontrado', err)
