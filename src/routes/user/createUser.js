@@ -31,7 +31,7 @@ router.post('/create', loginValidatorSign, async (req, res) => {
     bcrypt.genSalt(10)
         .then(salt => bcrypt.hash(password, salt))
         .then(hashPassword => {
-            prisma.user.findUnique({
+            prisma.user_cd.findUnique({
                 where: { email }
             })
             .then(user => {
@@ -39,10 +39,10 @@ router.post('/create', loginValidatorSign, async (req, res) => {
                     return res.status(400).json({msg: user.email, userId: user.id, signUserExist: false})
                 }
 
-                return prisma.user.create({
+                return prisma.user_cd.create({
                     data: {
                         email,
-                        password: hashPassword,
+                        passwordUser: hashPassword,
                         name,
                         isVerified: false
                     }
@@ -51,6 +51,7 @@ router.post('/create', loginValidatorSign, async (req, res) => {
                         data: {
                             totalPrice: 0,
                             userId: user.id,
+                            emailUser: email
                         }
                     }).catch(err => {
                         console.log(err)
@@ -60,7 +61,7 @@ router.post('/create', loginValidatorSign, async (req, res) => {
                     return generateJWTToken(user)
                         .then(token => {
 
-                            prisma.user.update({
+                            prisma.user_cd.update({
                                 where: { id: user.id },
                                 data: {
                                     token
@@ -73,7 +74,7 @@ router.post('/create', loginValidatorSign, async (req, res) => {
                 })
             })
         }).catch(err => {
-            console.log(err)
+            console.log(err, 'Caiu aqui')
             res.status(500).json({ msg: 'Erro no servidor, tente novamente' })
         })
 })

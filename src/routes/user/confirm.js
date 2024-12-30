@@ -17,7 +17,7 @@ router.get('/confirm', (req, res) => {
     verifyEmailToken(token).then(decoded => {
         const {userId} = decoded
 
-        prisma.user.findUnique({
+        prisma.user_cd.findUnique({
             where: { id: userId }
         }).then(user => {
             if (!user) {
@@ -27,7 +27,7 @@ router.get('/confirm', (req, res) => {
                 return res.status(400).sendFile(path.join(__dirname, '..', '..', '..', 'public', 'errorToken', 'index.html'))
             }
 
-            return prisma.user.update({
+            return prisma.user_cd.update({
                 where: {id: userId},
                 data: {
                     isVerified: true,

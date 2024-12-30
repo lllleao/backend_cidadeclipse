@@ -16,7 +16,9 @@ router.get('/store-books/:id', (req, res) => {
 
     book.then(data => {
         res.json(data)
-    }).catch((err) => res.status(500).json({ error: err }))
+    }).catch((err) => {
+        res.status(500).json({ error: err })
+    })
 })
 
 export default router

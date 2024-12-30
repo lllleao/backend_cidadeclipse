@@ -20,9 +20,11 @@ router.post('/login', loginValidatorLogin, (req, res) => {
     if (token) return res.status(400).json({msg: 'Login já realizado'})
     
     const { email, password } = req.body
-    if (!erros.isEmpty()) return res.status(400).json({ erros: erros.array() })
+    if (!erros.isEmpty()) {
+        return res.status(400).json({ erros: erros.array() })
+    }
 
-    prisma.user.findUnique({
+    prisma.user_cd.findUnique({
         where: {
             email
         }
@@ -30,7 +32,7 @@ router.post('/login', loginValidatorLogin, (req, res) => {
         if (!user.isVerified) {
             return res.status(401).json({msg: 'Email não verificado'})
         }
-        bcrypt.compare(password, user.password).then(validPass => {
+        bcrypt.compare(password, user.passwordUser).then(validPass => {
             if (!validPass) {
 
                 return res.json({ msg: 'Senha não encontrada', loginUserExist: false, passWordCorrect: true, loginSuccess: false })

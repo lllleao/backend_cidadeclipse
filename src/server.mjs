@@ -13,14 +13,13 @@ import profile from './routes/user/profile.js'
 import logout from './routes/user/logout.js'
 import cookieParser from 'cookie-parser'
 
-import cart from './routes/cart/mainCart.js'
 import addToCart from './routes/cart/addToCart.js'
 import cartItems from './routes/cart/cartItems.js'
 import removeItem from './routes/cart/removeItem.js'
 import updatePrice from './routes/cart/updatePrice.js'
 import getTotalPrice from './routes/cart/getTotalPrice.js'
 
-import addPurc from './routes/checkout/addPurchase.js'
+// import addPurc from './routes/checkout/addPurchase.js'
 
 import confirm from './routes/user/confirm.js'
 import path from 'path'
@@ -90,14 +89,13 @@ app.use('/', profile)
 app.use('/', logout)
 app.use('/', confirm)
 
-app.use('/', cart)
 app.use('/', addToCart)
 app.use('/', updatePrice)
 app.use('/', cartItems)
 app.use('/', removeItem)
 app.use('/', getTotalPrice)
 app.post('/cleanupUsers', cleanupUnverifiedUsers)
-app.use('/', addPurc)
+// app.use('/', addPurc)
 
 // Check token
 app.use('/getCookie', authMiddToken, (req, res) => {

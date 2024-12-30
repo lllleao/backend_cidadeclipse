@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 router.get('/profile', authMiddToken, async (req, res) => {
     const userId = req.user
 
-    prisma.user.findUnique({
+    prisma.user_cd.findUnique({
         where: {
             id: userId
         }

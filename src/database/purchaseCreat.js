@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient
 
 const createPurchase = async (userId, buyerName, buyerAddress, buyerCPF, totalPrice, items) => {
-    // console.log(userId, buyerAddress, buyerName, buyerCPF, totalPrice, items)
 
     const purchase = await prisma.$transaction(async (prisma) => {
         const newPurchase = await prisma.purchase.create({
