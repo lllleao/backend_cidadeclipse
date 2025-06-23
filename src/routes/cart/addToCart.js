@@ -15,31 +15,28 @@ router.post('/addCart', authMiddToken, (req, res) => {
     if (!token)
         return res.status(401).json({ msg: 'Requisição não autorizada' })
 
-    prisma.cart
-        .findUnique({
+    prisma.cart.findUnique({
             where: {
                 userId
             }
-        })
-        .then((cart) => {
+        }).then((cart) => {
             prisma.item.findMany({
                 where: {
                     cartId: cart.id
                 }
             }).then((itemsCart) => {
-                prisma.item
-                    .create({
+                console.log(itemsCart)
+                prisma.item.create(
+                    {
                         data: {
                             cartId: cart.id,
-                            id: itemsCart.length + 1,
                             userId,
                             name,
                             photo,
                             price,
                             quant
                         }
-                    })
-                    .then((item) => {
+                    }).then((item) => {
                         prisma.item
                             .aggregate({
                                 _sum: {
@@ -73,14 +70,15 @@ router.post('/addCart', authMiddToken, (req, res) => {
                                     .status(401)
                                     .json({ msg: 'Preço não somado' })
                             })
+                    }).catch((err) => {
+                        console.log(err, 'Item não criado')
+                        return res.status(401).json({ msg: 'não criado' })
                     })
-                    .catch((err) => {
-                        console.log(err, 'Item criado')
-                        return res.status(401).json({ msg: 'criado' })
-                    })
+            }).catch((err) => {
+                console.log(err, 'Itens não encontrados')
+                return res.status(401).json({ msg: 'não criado' })
             })
-        })
-        .catch((err) => {
+        }).catch((err) => {
             console.error('Carrinho não encontrado', err)
             return res.status(500).json({ msg: 'Carrinho não encontrado' })
         })

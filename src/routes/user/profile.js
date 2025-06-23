@@ -13,7 +13,21 @@ router.get('/profile', authMiddToken, async (req, res) => {
             id: userId
         }
     }).then(user => {
-        res.status(201).json({ id: user.id, email: user.email, name: user.name })
+        prisma.purchase.findMany({
+            where: { userId },
+            include: { items: true }
+        }).then(purchaseData => {
+            const dataPurchase = purchaseData.map(order => {
+                return {
+                    totalPrice: order.totalPrice,
+                    createdAt: order.createdAt,
+                    items: order.items
+                }   
+            })
+            console.log(purchaseData)
+
+            res.status(201).json({ email: user.email, name: user.name, dataPurchase })
+        })
     }).catch(err => {
         res.clearCookie('token')
         console.error(err)

@@ -10,5 +10,7 @@ export const deleteUser = (user) => {
         console.log('Usuario deletado')
     }).catch(err => {
         console.error(err)
+    }).finally(() => {
+        prisma.$disconnect()
     })
 }

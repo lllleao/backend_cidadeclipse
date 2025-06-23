@@ -33,8 +33,7 @@ router.post('/create', loginValidatorSign, async (req, res) => {
         .then(hashPassword => {
             prisma.user_cd.findUnique({
                 where: { email }
-            })
-            .then(user => {
+            }).then(user => {
                 if (user) {
                     return res.status(400).json({msg: user.email, userId: user.id, signUserExist: false})
                 }

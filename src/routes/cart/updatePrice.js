@@ -12,27 +12,20 @@ router.patch('/updataPrice', authMiddToken, (req, res) => {
 
     if (!token) return res.status(401).json({ msg: 'Token inválido' })
 
-    prisma.cart
-        .findUnique({
+    prisma.cart.findUnique({
             where: {
                 userId
             }
-        })
-        .then((cartFirst) => {
-            prisma.item
-                .update({
+        }).then(() => {
+            prisma.item.update({
                     where: {
-                        id_cartId: {
-                            cartId: cartFirst.id,
-                            id: idItem
-                        }
+                        id: idItem
                     },
                     data: {
                         quant: quantCurrent,
                         price: (price / quantBefore) * quantCurrent
                     }
-                })
-                .then((item) => {
+                }).then((item) => {
                     prisma.item
                         .aggregate({
                             _sum: {
@@ -41,21 +34,16 @@ router.patch('/updataPrice', authMiddToken, (req, res) => {
                             where: {
                                 cartId: item.cartId
                             }
-                        })
-                        .then((totalPrice) => {
-                            prisma.cart
-                                .update({
+                        }).then((totalPrice) => {
+                            prisma.cart.update({
                                     where: { id: item.cartId },
                                     data: {
                                         totalPrice: totalPrice._sum.price || 0
                                     }
-                                })
-                                .catch((err) => console.log(err))
-                        })
-                        .catch((err) => console.log(err))
+                                }).catch((err) => console.log(err))
+                        }).catch((err) => console.log(err))
                     res.status(200).json({ msg: 'Price updated successfully' })
-                })
-                .catch((err) => {
+                }).catch((err) => {
                     console.error(err)
                     res.status(500).json({ msg: 'Price was not updated' })
                 })

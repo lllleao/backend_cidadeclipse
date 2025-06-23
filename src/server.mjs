@@ -19,13 +19,15 @@ import removeItem from './routes/cart/removeItem.js'
 import updatePrice from './routes/cart/updatePrice.js'
 import getTotalPrice from './routes/cart/getTotalPrice.js'
 
-// import addPurc from './routes/checkout/addPurchase.js'
+import addPurc from './routes/checkout/addPurchase.js'
 
 import confirm from './routes/user/confirm.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import authMiddToken from './routes/auth/authToken.js'
 import cleanupUnverifiedUsers from './deleteUser/cleanUserNotVerified.js'
+
+import ordersCompleted from './routes/user/purchaseCompleted.js'
 
 dotenv.config()
 
@@ -95,7 +97,8 @@ app.use('/', cartItems)
 app.use('/', removeItem)
 app.use('/', getTotalPrice)
 app.post('/cleanupUsers', cleanupUnverifiedUsers)
-// app.use('/', addPurc)
+app.use('/', addPurc)
+app.use('/', ordersCompleted)
 
 // Check token
 app.use('/getCookie', authMiddToken, (req, res) => {
