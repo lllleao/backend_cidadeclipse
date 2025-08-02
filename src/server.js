@@ -42,41 +42,44 @@ app.use(express.json())
 app.use(helmet())
 app.use(cookieParser())
 
-app.use(helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'"],
-        imgSrc: ["'self'"],
-        connectSrc: ["'self'"],
-        frameSrc: ["'none'"],
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
-        formAction: ["'self'"],
-    }
-}))
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'"],
+            styleSrc: ["'self'"],
+            imgSrc: ["'self'"],
+            connectSrc: ["'self'"],
+            frameSrc: ["'none'"],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"]
+        }
+    })
+)
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
-    methods: 'GET,POST,OPTIONS,DELETE,PATCH',
-    allowedHeaders: ['Content-Type', 'CSRF-Token', 'authorization'],
-    credentials: true
-}))
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true)
+            } else {
+                callback(new Error('Not allowed by CORS'))
+            }
+        },
+        methods: 'GET,POST,OPTIONS,DELETE,PATCH',
+        allowedHeaders: ['Content-Type', 'CSRF-Token', 'authorization'],
+        credentials: true
+    })
+)
 
 const sendDataLimiter = rateLimit({
     windowMs: 10 * 60 * 1000,
     max: 20,
     message: 'Muitas requisições deste IP, por favor tente novamente mais tarde'
 })
-
 
 app.use('/books', publicBooks)
 app.use('/', storeBooks)
@@ -102,16 +105,15 @@ app.use('/', ordersCompleted)
 
 // Check token
 app.use('/getCookie', authMiddToken, (req, res) => {
-
-    res.status(200).json({msg: 'Conexão válida'})
+    res.status(200).json({ msg: 'Conexão válida' })
 })
 
-const isVercel = process.env.DEPLOY === 'vercel' ? 1 : 0
+// const isVercel = process.env.DEPLOY === 'vercel' ? 1 : 0
 
-if (!isVercel) {
-    app.listen(PORT, () => {
+// if (!isVercel) {
+// }
+app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}`)
 })
-}
 
 export default app
