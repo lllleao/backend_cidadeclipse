@@ -3,7 +3,7 @@ import { getBooksPublic } from '../../database/db.js'
 
 const router = express.Router()
 
-router.get('/public-books', (req, res) => {
+router.get('/free', (req, res) => {
     const data = getBooksPublic()
     data.then((data) => {
         res.json(data)

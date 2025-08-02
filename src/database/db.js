@@ -11,7 +11,7 @@ export const getBooksPublic = async () => {
 export const getBooksStore = async (id) => {
     if (!id) {
         const storeBooksDate = await prisma.store_book.findMany({}).then(res => res).then(res => res).catch(err => console.log('Error', err)).finally(() => prisma.$disconnect())
-    
+
         return storeBooksDate
     }
 
@@ -21,6 +21,6 @@ export const getBooksStore = async (id) => {
             store_books_credits: true
         },
     }).then(res => res).catch(err => console.log('Error', err)).finally(() => prisma.$disconnect())
-    
+
     return storeBooksDate
 }

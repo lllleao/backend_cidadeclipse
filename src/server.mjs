@@ -78,11 +78,11 @@ const sendDataLimiter = rateLimit({
 })
 
 
-app.use('/', publicBooks)
+app.use('/books', publicBooks)
 app.use('/', storeBooks)
 
-app.use('/api', sendDataLimiter, emailRoutes)
-app.use('/', routeCrsf)
+app.use('/email', sendDataLimiter, emailRoutes)
+app.use('/auth', routeCrsf)
 
 // user
 app.use('/', createUser)

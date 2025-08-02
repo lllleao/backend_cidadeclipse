@@ -3,10 +3,10 @@ import { generateCsrfToken } from '../../logicsEmail/csrfTokens.js'
 
 const router = express.Router()
 
-router.get('/csrf-token', (req, res) => {
-    const csrfToken = generateCsrfToken()
+router.get('/get-csrfToken', (req, res) => {
+    const token = generateCsrfToken()
 
-    res.json({ csrfToken })
+    res.status(200).json({ token })
 })
 
 export default router
