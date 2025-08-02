@@ -3,26 +3,27 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 var _express = _interopRequireDefault(require("express"));
 var _bcrypt = _interopRequireDefault(require("bcrypt"));
 var _client = require("@prisma/client");
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _expressValidator = require("express-validator");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-var router = _express["default"].Router();
-var prisma = new _client.PrismaClient();
-var JWT_SECRET = process.env.JWT_SECRET;
-var loginValidatorLogin = [(0, _expressValidator.body)('email').isEmail().trim().notEmpty().withMessage('Por favor, forneça um email válido'), (0, _expressValidator.body)('password').notEmpty().withMessage('Senha é obrigatória')];
-router.post('/login', loginValidatorLogin, function (req, res) {
-  var erros = (0, _expressValidator.validationResult)(req);
-  var token = req.cookies.token;
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const router = _express.default.Router();
+const prisma = new _client.PrismaClient();
+const JWT_SECRET = process.env.JWT_SECRET;
+const loginValidatorLogin = [(0, _expressValidator.body)('email').isEmail().trim().notEmpty().withMessage('Por favor, forneça um email válido'), (0, _expressValidator.body)('password').notEmpty().withMessage('Senha é obrigatória')];
+router.post('/login', loginValidatorLogin, (req, res) => {
+  const erros = (0, _expressValidator.validationResult)(req);
+  const token = req.cookies.token;
   if (token) return res.status(400).json({
     msg: 'Login já realizado'
   });
-  var _req$body = req.body,
-    email = _req$body.email,
-    password = _req$body.password;
+  const {
+    email,
+    password
+  } = req.body;
   if (!erros.isEmpty()) {
     return res.status(400).json({
       erros: erros.array()
@@ -30,15 +31,15 @@ router.post('/login', loginValidatorLogin, function (req, res) {
   }
   prisma.user_cd.findUnique({
     where: {
-      email: email
+      email
     }
-  }).then(function (user) {
+  }).then(user => {
     if (!user.isVerified) {
       return res.status(401).json({
         msg: 'Email não verificado'
       });
     }
-    _bcrypt["default"].compare(password, user.passwordUser).then(function (validPass) {
+    _bcrypt.default.compare(password, user.passwordUser).then(validPass => {
       if (!validPass) {
         return res.json({
           msg: 'Senha não encontrada',
@@ -47,7 +48,7 @@ router.post('/login', loginValidatorLogin, function (req, res) {
           loginSuccess: false
         });
       }
-      var token = _jsonwebtoken["default"].sign({
+      const token = _jsonwebtoken.default.sign({
         userId: user.id
       }, JWT_SECRET, {
         expiresIn: '1h'
@@ -66,11 +67,11 @@ router.post('/login', loginValidatorLogin, function (req, res) {
         loginSuccess: true
       });
     });
-  })["catch"](function (err) {
+  }).catch(err => {
     console.log(err);
     return res.status(404).json({
       msg: 'Email incorreto'
     });
   });
 });
-var _default = exports["default"] = router;
+var _default = exports.default = router;

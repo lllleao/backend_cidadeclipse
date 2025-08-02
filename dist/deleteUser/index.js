@@ -6,18 +6,19 @@ Object.defineProperty(exports, "__esModule", {
 exports.deleteUser = void 0;
 var _express = _interopRequireDefault(require("express"));
 var _client = require("@prisma/client");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-var prisma = new _client.PrismaClient();
-var deleteUser = exports.deleteUser = function deleteUser(user) {
-  prisma.user["delete"]({
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const prisma = new _client.PrismaClient();
+const deleteUser = user => {
+  prisma.user.delete({
     where: {
       id: user
     }
-  }).then(function () {
+  }).then(() => {
     console.log('Usuario deletado');
-  })["catch"](function (err) {
+  }).catch(err => {
     console.error(err);
-  })["finally"](function () {
+  }).finally(() => {
     prisma.$disconnect();
   });
 };
+exports.deleteUser = deleteUser;

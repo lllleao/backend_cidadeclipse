@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.csrfCheck = csrfCheck;
 exports.generateCsrfToken = generateCsrfToken;
 var _csrf = _interopRequireDefault(require("csrf"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-var tokens = new _csrf["default"]();
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const tokens = new _csrf.default();
 function csrfCheck(req, res, next) {
-  var tokenFromHeader = req.headers['csrf-token'];
+  const tokenFromHeader = req.headers['csrf-token'];
   if (tokenFromHeader && tokens.verify(process.env.CSRF_SECRET, tokenFromHeader)) {
     next();
   } else {

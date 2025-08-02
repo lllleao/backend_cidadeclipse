@@ -2,13 +2,12 @@
     "name": "backend",
     "version": "1.0.0",
     "main": "index.mjs",
-    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon ./src/server.mjs",
         "start": "node ./src/server.mjs",
         "postinstall": "prisma generate",
-        "build": "babel src --out-dir dist --extensions \".js,.cjs\""
+        "build": "babel src --out-dir dist --extensions \".js\""
     },
     "keywords": [],
     "author": "",

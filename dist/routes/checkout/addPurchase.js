@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 var _express = _interopRequireDefault(require("express"));
 var _authToken = _interopRequireDefault(require("../auth/authToken.js"));
 var _expressValidator = require("express-validator");
@@ -11,10 +11,10 @@ var _index = _interopRequireDefault(require("../../cpfValidation/index.js"));
 var _client = require("@prisma/client");
 var _purchaseCreat = _interopRequireDefault(require("../../database/purchaseCreat.js"));
 var _criarCobrança = _interopRequireDefault(require("../apiPix/criarCobran\xE7a.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-var router = _express["default"].Router();
-var prisma = new _client.PrismaClient();
-var validationPurchase = [(0, _expressValidator.body)('name').notEmpty().trim().escape().isLength({
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const router = _express.default.Router();
+const prisma = new _client.PrismaClient();
+const validationPurchase = [(0, _expressValidator.body)('name').notEmpty().trim().escape().isLength({
   min: 0,
   max: 40
 }).withMessage('Por favor, forneça um nome válido'), (0, _expressValidator.body)('cpf').notEmpty().isNumeric().escape().isLength({
@@ -36,20 +36,21 @@ var validationPurchase = [(0, _expressValidator.body)('name').notEmpty().trim().
   min: 0,
   max: 6
 }).withMessage('Por favor, forneça um complemento válido')];
-router.post('/purchase', validationPurchase, _authToken["default"], function (req, res) {
-  var erros = (0, _expressValidator.validationResult)(req);
-  var _req$body = req.body,
-    name = _req$body.name,
-    cpf = _req$body.cpf,
-    cep = _req$body.cep,
-    street = _req$body.street,
-    neighborhood = _req$body.neighborhood,
-    complement = _req$body.complement,
-    number = _req$body.number,
-    itemsInfo = _req$body.itemsInfo,
-    totalPrice = _req$body.totalPrice;
-  var userId = req.user;
-  var isCpfValid = (0, _index["default"])(cpf);
+router.post('/purchase', validationPurchase, _authToken.default, (req, res) => {
+  const erros = (0, _expressValidator.validationResult)(req);
+  const {
+    name,
+    cpf,
+    cep,
+    street,
+    neighborhood,
+    complement,
+    number,
+    itemsInfo,
+    totalPrice
+  } = req.body;
+  const userId = req.user;
+  const isCpfValid = (0, _index.default)(cpf);
   if (!erros.isEmpty()) {
     return res.status(401).json({
       erros: erros.array()
@@ -58,23 +59,23 @@ router.post('/purchase', validationPurchase, _authToken["default"], function (re
   if (!isCpfValid) return res.status(401).json({
     mgs: 'CPF Inválido'
   });
-  var address = street + ' ' + ' ' + neighborhood + ' ' + number + ' ' + cep + ' ' + complement;
+  const address = street + ' ' + ' ' + neighborhood + ' ' + number + ' ' + cep + ' ' + complement;
   console.log(cpf, name, parseFloat(totalPrice).toFixed(2));
-  (0, _criarCobrança["default"])(cpf, name, parseFloat(totalPrice).toFixed(2)).then(function (response) {
+  (0, _criarCobrança.default)(cpf, name, parseFloat(totalPrice).toFixed(2)).then(response => {
     console.log('aqui');
     res.status(200).json({
       pixData: response.data
     });
-    (0, _purchaseCreat["default"])(userId, name, address, cpf, totalPrice, itemsInfo).then(function (err) {
+    (0, _purchaseCreat.default)(userId, name, address, cpf, totalPrice, itemsInfo).then(err => {
       console.log(err, 'opa 1');
-    })["catch"](function (err) {
+    }).catch(err => {
       console.error(err, 'opa 2');
     });
-  })["catch"](function (err) {
+  }).catch(err => {
     console.error(err, 'opa');
     res.status(405).json({
       msg: 'Cobrança não criada'
     });
   });
 });
-var _default = exports["default"] = router;
+var _default = exports.default = router;

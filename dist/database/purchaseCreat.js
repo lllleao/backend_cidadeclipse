@@ -3,41 +3,42 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 var _client = require("@prisma/client");
-var prisma = new _client.PrismaClient();
-var createPurchase = function createPurchase(userId, buyerName, buyerAddress, buyerCPF, totalPrice, items) {
-  return new Promise(function (resolve, reject) {
+const prisma = new _client.PrismaClient();
+const createPurchase = (userId, buyerName, buyerAddress, buyerCPF, totalPrice, items) => {
+  return new Promise((resolve, reject) => {
     prisma.purchase.create({
       data: {
-        buyerAddress: buyerAddress,
-        buyerCPF: buyerCPF,
-        buyerName: buyerName,
+        buyerAddress,
+        buyerCPF,
+        buyerName,
         totalPrice: parseFloat(totalPrice),
         createdAt: new Date(),
-        userId: userId
+        userId
       }
-    }).then(function (orderData) {
+    }).then(orderData => {
       prisma.purchaseItem.createMany({
-        data: items.map(function (_ref) {
-          var name = _ref.name,
-            quant = _ref.quant,
-            price = _ref.price,
-            photo = _ref.photo;
+        data: items.map(({
+          name,
+          quant,
+          price,
+          photo
+        }) => {
           return {
-            name: name,
-            quant: quant,
+            name,
+            quant,
             price: parseFloat(price),
-            photo: photo,
+            photo,
             purchaseId: orderData.id
           };
         })
-      })["catch"](function (err) {
+      }).catch(err => {
         reject(err);
       });
-    })["catch"](function (err) {
+    }).catch(err => {
       reject(err);
     });
   });
 };
-var _default = exports["default"] = createPurchase;
+var _default = exports.default = createPurchase;
