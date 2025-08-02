@@ -4,7 +4,7 @@ import { validationResult, body } from 'express-validator'
 import cpfValidator from '../../cpfValidation/index.js'
 import { PrismaClient } from '@prisma/client'
 import createPurchase from '../../database/purchaseCreat.js'
-import criarCob from '../apiPix/criarCobrança.js'
+// import criarCob from '../apiPix/criarCobrança.js'
 
 const router = express.Router()
 const prisma = new PrismaClient()
@@ -63,7 +63,7 @@ router.post(
             totalPrice
         } = req.body
 
-        const userId = req.user
+        // const userId = req.user
         const isCpfValid = cpfValidator(cpf)
         if (!erros.isEmpty()) {
             return res.status(401).json({ erros: erros.array() })
@@ -75,20 +75,20 @@ router.post(
 
         console.log(cpf, name, parseFloat(totalPrice).toFixed(2))
 
-        criarCob(cpf, name, parseFloat(totalPrice).toFixed(2)).then(response => {
-            console.log('aqui')
-            
-            res.status(200).json({pixData: response.data})
-            createPurchase(userId, name, address, cpf, totalPrice, itemsInfo).then((err) => {
-                console.log(err, 'opa 1')
-            }).catch(err => {
-                console.error(err, 'opa 2')
-            })
+        // criarCob(cpf, name, parseFloat(totalPrice).toFixed(2)).then(response => {
+        //     console.log('aqui')
 
-        }).catch(err => {
-            console.error(err, 'opa')
-            res.status(405).json({ msg: 'Cobrança não criada' })
-        })
+        //     res.status(200).json({pixData: response.data})
+        //     createPurchase(userId, name, address, cpf, totalPrice, itemsInfo).then((err) => {
+        //         console.log(err, 'opa 1')
+        //     }).catch(err => {
+        //         console.error(err, 'opa 2')
+        //     })
+
+        // }).catch(err => {
+        //     console.error(err, 'opa')
+        //     res.status(405).json({ msg: 'Cobrança não criada' })
+        // })
     }
 )
 

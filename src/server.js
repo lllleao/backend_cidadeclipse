@@ -108,12 +108,12 @@ app.use('/getCookie', authMiddToken, (req, res) => {
     res.status(200).json({ msg: 'Conexão válida' })
 })
 
-// const isVercel = process.env.DEPLOY === 'vercel' ? 1 : 0
+const isVercel = process.env.DEPLOY === 'vercel' ? 1 : 0
 
-// if (!isVercel) {
-// }
-app.listen(PORT, () => {
-    console.log(`Running on Port ${PORT}`)
-})
+if (!isVercel) {
+    app.listen(PORT, () => {
+        console.log(`Running on Port ${PORT}`)
+    })
+}
 
 export default app
