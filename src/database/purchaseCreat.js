@@ -2,34 +2,35 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient
 
-const createPurchase = async (userId, buyerName, buyerAddress, buyerCPF, totalPrice, items) => {
-
-    const purchase = await prisma.$transaction(async (prisma) => {
-        const newPurchase = await prisma.purchase.create({
+const createPurchase = (userId, buyerName, buyerAddress, buyerCPF, totalPrice, items) => {
+    return new Promise((resolve, reject) => {
+        prisma.purchase.create({
             data: {
-                userId,
-                buyerName,
                 buyerAddress,
                 buyerCPF,
-                totalPrice
+                buyerName,
+                totalPrice: parseFloat(totalPrice),
+                createdAt: new Date(),
+                userId,
             }
+        }).then(orderData => {
+            prisma.purchaseItem.createMany({
+                data: items.map(({name, quant, price, photo}) => {
+                    return {
+                        name,
+                        quant,
+                        price: parseFloat(price),
+                        photo,
+                        purchaseId: orderData.id
+                    }
+                })
+            }).catch(err => {
+                reject(err)
+            })
+        }).catch(err => {
+            reject(err)
         })
-
-        const itemsData = items.map((item) => ({
-            name: item.name,
-            photo: item.photo,
-            price: item.price,
-            quant: item.quant,
-            purchaseId: newPurchase.userId,
-        }));
-
-        await prisma.itemInfo.createMany({
-            data: itemsData
-        })
-
-        return newPurchase
     })
-    return purchase
 }
 
 export default createPurchase

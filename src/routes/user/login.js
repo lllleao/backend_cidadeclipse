@@ -18,7 +18,7 @@ router.post('/login', loginValidatorLogin, (req, res) => {
     const token = req.cookies.token
 
     if (token) return res.status(400).json({msg: 'Login já realizado'})
-    
+
     const { email, password } = req.body
     if (!erros.isEmpty()) {
         return res.status(400).json({ erros: erros.array() })
@@ -39,7 +39,7 @@ router.post('/login', loginValidatorLogin, (req, res) => {
             }
 
             const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' })
-
+            
             res.cookie('token', token, {
                 path: '/',
                 httpOnly: true,

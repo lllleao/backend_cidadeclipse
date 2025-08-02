@@ -23,18 +23,17 @@ router.post('/create', loginValidatorSign, async (req, res) => {
     const tokenLogado = req.cookies.token
 
     if (tokenLogado) return res.status(400).json({msg: 'Cadastro já realizado'})
-    
+
     if (!erros.isEmpty()) return res.status(400).json({ msg: 'Credenciais incorretas' })
 
-    
+
 
     bcrypt.genSalt(10)
         .then(salt => bcrypt.hash(password, salt))
         .then(hashPassword => {
             prisma.user_cd.findUnique({
                 where: { email }
-            })
-            .then(user => {
+            }).then(user => {
                 if (user) {
                     return res.status(400).json({msg: user.email, userId: user.id, signUserExist: false})
                 }

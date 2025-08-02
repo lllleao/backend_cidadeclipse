@@ -49,8 +49,7 @@ const validationPurchase = [
 router.post(
     '/purchase',
     validationPurchase,
-    authMiddToken,
-    async (req, res) => {
+    authMiddToken, (req, res) => {
         const erros = validationResult(req)
         const {
             name,
@@ -74,15 +73,22 @@ router.post(
 
         const address = street+' '+' '+neighborhood+' '+number+' '+cep+' '+complement
 
-        try {
-            // const newPurchase = await createPurchase(userId, name, address, cpf, totalPrice, itemsInfo)
-            // const pixData = await criarCob('12345678909', 'Lucas Leão', '10.00')
-            console.log(pixData)
-            res.status(200).json({pixData: pixData.data})
-        } catch (err) {
-            console.error(err)
+        console.log(cpf, name, parseFloat(totalPrice).toFixed(2))
+
+        criarCob(cpf, name, parseFloat(totalPrice).toFixed(2)).then(response => {
+            console.log('aqui')
+            
+            res.status(200).json({pixData: response.data})
+            createPurchase(userId, name, address, cpf, totalPrice, itemsInfo).then((err) => {
+                console.log(err, 'opa 1')
+            }).catch(err => {
+                console.error(err, 'opa 2')
+            })
+
+        }).catch(err => {
+            console.error(err, 'opa')
             res.status(405).json({ msg: 'Cobrança não criada' })
-        }
+        })
     }
 )
 

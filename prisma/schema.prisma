@@ -48,6 +48,7 @@ model user_cd {
   createdAt    DateTime? @default(now())
   token        String?   @db.Text
   cart         cart?
+  purchase     Purchase[]
 }
 
 model cart {
@@ -62,7 +63,7 @@ model cart {
 }
 
 model item {
-  id     Int
+  id     Int    @id    @default(autoincrement())
   cartId Int
   userId Int
   name   String @db.VarChar(255)
@@ -71,6 +72,33 @@ model item {
   quant  Int
   cart   cart   @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "item_ibfk_1")
 
-  @@id([id, cartId])
   @@unique([cartId, name], map: "cartId")
+}
+
+model Purchase {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  buyerName    String   @db.VarChar(255)
+  buyerAddress String   @db.Text
+  buyerCPF     String   @db.VarChar(11)
+  totalPrice   Float
+  createdAt    DateTime @default(now())
+
+  items        PurchaseItem[]
+  user_cd      user_cd  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id         Int     @id @default(autoincrement())
+  purchaseId Int
+  name       String  @db.VarChar(255)
+  photo      String  @db.VarChar(255)
+  price      Float
+  quant      Int
+
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@map("purchase_items")
 }
