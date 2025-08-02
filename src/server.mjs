@@ -109,3 +109,5 @@ app.use('/getCookie', authMiddToken, (req, res) => {
 app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}`)
 })
+
+export default app
