@@ -97,7 +97,8 @@ app.use('/getCookie', _authToken["default"], function (req, res) {
     msg: 'Conexão válida'
   });
 });
-if (process.env.DEPLOY !== 'vercel') {
+var isVercel = process.env.DEPLOY === 'vercel' ? 1 : 0;
+if (!isVercel) {
   app.listen(PORT, function () {
     console.log("Running on Port ".concat(PORT));
   });
