@@ -1,6 +1,5 @@
 {
     "version": 2,
-    "buildCommand": "npm install && npm run build",
     "builds": [
         {
             "src": "dist/server.js",
@@ -8,9 +7,11 @@
         }
     ],
     "routes": [
+
         {
             "src": "/(.*)",
             "dest": "dist/server.js"
         }
-    ]
+    ],
+    "buildCommand": "npm install && npm run build"
 }
